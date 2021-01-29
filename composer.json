@@ -8,11 +8,17 @@
     ],
     "description": "This plugin add blog capabilities to your Sylius project",
     "license": "MIT",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/mkalkowski83/OdiseoBlogBundle"
+        }
+    ],
     "require": {
         "php": "^7.3",
 
-        "sylius/sylius": "^1.3",
-        "odiseoteam/blog-bundle": "^1.1"
+        "sylius/sylius": "^1.8",
+        "odiseoteam/blog-bundle": "dev-features/upgrade-libs"
     },
     "require-dev": {
         "behat/behat": "^3.6.1",
