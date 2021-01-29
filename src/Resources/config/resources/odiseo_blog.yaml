@@ -1,9 +1,19 @@
-odiseo_blog:
+sylius_resource:
     resources:
-        article:
+        odiseo_blog.article:
+            driver: doctrine/orm
             classes:
                 model: Odiseo\SyliusBlogPlugin\Entity\Article
                 repository: Odiseo\SyliusBlogPlugin\Repository\ArticleRepository
-        article_comment:
+
+        odiseo_blog.article_comment:
+            driver: doctrine/orm
             classes:
                 model: Odiseo\SyliusBlogPlugin\Entity\ArticleComment
+
+        odiseo_blog.article_category:
+            driver: doctrine/orm
+            classes:
+                model: Odiseo\BlogBundle\Model\ArticleCategory
+                repository: Odiseo\BlogBundle\Doctrine\ORM\ArticleCategoryRepository
+
