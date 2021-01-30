@@ -4,16 +4,17 @@ sylius_resource:
             driver: doctrine/orm
             classes:
                 model: Odiseo\SyliusBlogPlugin\Entity\Article
+                interface: Odiseo\SyliusBlogPlugin\Entity\ArticleInterface
                 repository: Odiseo\SyliusBlogPlugin\Repository\ArticleRepository
 
         odiseo_blog.article_comment:
             driver: doctrine/orm
             classes:
                 model: Odiseo\SyliusBlogPlugin\Entity\ArticleComment
+                repository: Odiseo\BlogBundle\Doctrine\ORM\ArticleCommentRepository
 
         odiseo_blog.article_category:
             driver: doctrine/orm
             classes:
                 model: Odiseo\BlogBundle\Model\ArticleCategory
                 repository: Odiseo\BlogBundle\Doctrine\ORM\ArticleCategoryRepository
-
