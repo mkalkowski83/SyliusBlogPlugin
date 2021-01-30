@@ -13,7 +13,7 @@ default:
 
         Behat\MinkExtension:
             files_path: "%paths.base%/vendor/sylius/sylius/src/Sylius/Behat/Resources/fixtures/"
-            base_url: "https://127.0.0.1:8080/"
+            base_url: "http://nginx:80/"
             default_session: symfony
             javascript_session: chrome_headless
             sessions:
@@ -26,11 +26,13 @@ default:
                 chrome:
                     selenium2:
                         browser: chrome
+                        wd_host: http://hub:4444/wd/hub # Add this
                         capabilities:
                             browserName: chrome
                             browser: chrome
                             version: ""
                             marionette: null # https://github.com/Behat/MinkExtension/pull/311
+                            javascriptEnabled: true # Add this
                             chrome:
                                 switches:
                                     - "start-fullscreen"

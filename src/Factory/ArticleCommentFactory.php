@@ -7,18 +7,19 @@ namespace Odiseo\SyliusBlogPlugin\Factory;
 use Odiseo\BlogBundle\Factory\ArticleCommentFactoryInterface;
 use Odiseo\BlogBundle\Model\ArticleCommentInterface;
 use Sylius\Component\Core\Model\ShopUserInterface;
+use Sylius\Component\Resource\Factory\FactoryInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 final class ArticleCommentFactory implements ArticleCommentFactoryInterface
 {
-    /** @var ArticleCommentFactoryInterface  */
+    /** @var FactoryInterface  */
     private $decoratedFactory;
 
     /** @var ShopUserInterface|object|string|null */
     private $shopUser;
 
     public function __construct(
-        ArticleCommentFactoryInterface $decoratedFactory,
+        FactoryInterface $decoratedFactory,
         TokenStorageInterface $tokenStorage
     ) {
         $this->decoratedFactory = $decoratedFactory;

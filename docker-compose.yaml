@@ -1,0 +1,95 @@
+# docker-compose.yaml
+version: '3.4'
+
+services:
+    nginx:
+        container_name: blog_nginx
+        build:
+            context: .
+            dockerfile: docker/nginx/Dockerfile
+            cache_from:
+                - quay.io/sylius/php:latest
+                - quay.io/sylius/nginx:latest
+        image: quay.io/sylius/nginx:latest
+        depends_on:
+            - php
+        volumes:
+            - ./tests/Application/public:/srv/sylius/public:ro
+            # if you develop on Linux, you may use a bind-mounted host directory instead
+            - ./tests/Application/public/media:/srv/sylius/public/media:ro
+            #- public-media:/srv/sylius/public/media:ro,nocopy
+        ports:
+            - "80:80"
+    php:
+        container_name: blog_php
+        build:
+            context: .
+            dockerfile: docker/php/Dockerfile
+            cache_from:
+                - quay.io/sylius/php:latest
+                - quay.io/sylius/nginx:latest
+        image: quay.io/sylius/php:latest
+        depends_on:
+            - mysql
+        environment:
+            - APP_ENV=dev
+            - APP_DEBUG=1
+            - APP_SECRET=EDITME
+            - DATABASE_URL=mysql://sylius:nopassword@mysql/sylius
+            - PHP_DATE_TIMEZONE=${PHP_DATE_TIMEZONE:-UTC}
+        volumes:
+            - .:/srv/sylius:rw,cached
+            # if you develop on Linux, you may use a bind-mounted host directory instead
+            - ./var:/srv/sylius/var:rw
+            #- ./public:/srv/sylius/public:rw,delegated
+            # if you develop on Linux, you may use a bind-mounted host directory instead
+            - ./public/media:/srv/sylius/public/media:rw
+            #- public-media:/srv/sylius/public/media:rw
+    mysql:
+        container_name: blog_mysql
+        image: mysql:5.7
+        environment:
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-nopassword}
+            - MYSQL_DATABASE=sylius
+            - MYSQL_USER=sylius
+            - MYSQL_PASSWORD=${MYSQL_PASSWORD:-nopassword}
+        volumes:
+            - mysql-data:/var/lib/mysql:rw
+            # you may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+            - ./docker/mysql/data:/var/lib/mysql:rw,delegated
+        ports:
+            - "3306:3306"
+
+    hub:
+        container_name: blog_hub
+        image: selenium/hub:3.14.0-gallium
+        ports:
+            - "4444:4444"
+
+    chrome:
+        container_name: blog_chrome
+        #        image: selenium/node-chrome:3.14.0-gallium
+        #  You can also use this image and open the  container port to one of your host port to be able to use a VNC viewer
+        image: selenium/node-chrome-debug:3.14.0
+        depends_on:
+            - hub
+        environment:
+            - NOVNC=true
+            - HUB_HOST=hub
+            - HUB_PORT=4444
+            - SCREEN_WIDTH=1300
+            - SCREEN_HEIGHT=999
+            - NODE_HOST={{CONTAINER_IP}}
+            - VIDEO=false
+            - GRID=false
+            - CHROME=true
+            - FIREFOX=false
+        volumes:
+            - /dev/shm:/dev/sh
+        privileged: true
+
+        ports:
+            - "5900:5900"
+volumes:
+    mysql-data:
+    public-media:
